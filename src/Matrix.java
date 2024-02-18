@@ -122,6 +122,15 @@ public class Matrix {
             for (int j = 0; j < this.columnsCount; j++)
                 this.setItem(i, j, random.nextInt(from, to));
     }
+    public void createSingleMatrix()
+    {
+        for (int i = 0; i < this.rowsCount; i++)
+            for (int j = 0; j < this.columnsCount; j++)
+            {
+                if (i == j) this.setItem(i, j, 1);
+                else this.setItem(i, j, 0);
+            }
+    }
     void printMatrix()
     {
         System.out.println(Main.HEADER_OUTPUT + "Матрица " + rowsCount + " на " + columnsCount + ":" + Main.OUTPUT);
@@ -535,7 +544,6 @@ public class Matrix {
     public double powMethod(Vector y_0)
     {
         System.out.println(Main.ERROR + "Внимание, степенной метод работает только для матриц простой структуры" + Main.RESET);
-
         double maxAbsLambda;
         if (y_0 == null)
         {
@@ -568,5 +576,26 @@ public class Matrix {
         return maxAbsLambda;
     }
     /* СТЕПЕННОЙ МЕТОД
+    АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
+    public double advancedPowMethod(Vector y_0)
+    {
+        switch (ParseMessage.parseChoiceOfTwo("Max", "Min"))
+        {
+            case 1:
+                return this.powMethod(y_0);
+            case 2:
+                double biggestLambda = this.powMethod(y_0);
+                Matrix singleMatrix = new Matrix(this.rowsCount, this.columnsCount);
+                singleMatrix.createSingleMatrix();
+                singleMatrix.constantMultiplication(-biggestLambda).printMatrix();
+                Matrix newMatrix = this.matrixAddition(singleMatrix).cloneMatrix();
+                newMatrix.printMatrix();
+                return biggestLambda + newMatrix.powMethod(y_0);
+            default:
+                System.out.println(Main.ERROR + "ERROR" + Main.RESET);
+        }
+        return 0;
+    }
+    /* ПРОДВИНУТЫЙ СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ИЛИ НАИМЕНЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
 }
