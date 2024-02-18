@@ -13,18 +13,4 @@ public class Main {
         Matrix matrix = new Matrix(pathToMatrix);
         System.out.println(matrix.advancedPowMethod(null));
     }
-
-    /* EXAMPLES
-    #5
-        -3  4   -2      l1 = 1
-        1   0   1       l2 = 2
-        6   -6  5       l3 = -1
-
-    #6
-        2   -1  -1      l1 = l2 = 1
-        3   -2  -3      l3 = 0
-        -1  1   2
-
-    */
-
 }
