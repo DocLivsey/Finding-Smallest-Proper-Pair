@@ -548,6 +548,27 @@ public class Matrix {
     }
     public boolean isMatrixSingular()
     { return this.calculateDeterminant() == 0; }
+    public static class EigenPair {
+        protected double eigenValue;
+        protected Vector eigenVector;
+        public EigenPair(double eigenValue, Vector eigenVector)
+        { this.eigenValue = eigenValue; this.eigenVector = eigenVector; }
+        public double getEigenValue() {
+            return eigenValue;
+        }
+        public Vector getEigenVector() {
+            return eigenVector;
+        }
+        public void setEigenValue(double eigenValue) {
+            this.eigenValue = eigenValue;
+        }
+        public void setEigenVector(Vector eigenVector) {
+            this.eigenVector = eigenVector;
+        }
+        @Override
+        public String toString()
+        { return "eigenValue = " + this.eigenValue + " eigenVector = " + this.eigenVector.toString(); }
+    }
     /*public double powMethod(Vector y_0)
     {
         System.out.println(Main.ERROR + "Внимание, степенной метод работает только для матриц простой структуры" + Main.RESET);
@@ -575,7 +596,7 @@ public class Matrix {
         maxAbsLambda = lambda_K;
         return maxAbsLambda;
     }*/
-    public double powMethod(int pow, Vector y_0)
+    public EigenPair powMethod(int pow, Vector y_0)
     {
         double maxAbsLambda;
         System.out.println(Main.ERROR + "Внимание, степенной метод работает только для матриц простой структуры" + Main.RESET);
@@ -601,11 +622,11 @@ public class Matrix {
             xPrev = xNew.cloneVector();
         } while(Math.abs(lambda_K - maxAbsLambda) >= eps.getEpsilon());
         maxAbsLambda = lambda_K;
-        return maxAbsLambda;
+        return new EigenPair(maxAbsLambda, xPrev);
     }
     /* СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
-    public double advancedPowMethod(int pow, Vector y_0)
+    /*public double advancedPowMethod(int pow, Vector y_0)
     {
         switch (ParseMessage.parseChoiceOfTwo("Max", "Min"))
         {
@@ -623,7 +644,7 @@ public class Matrix {
                 System.out.println(Main.ERROR + "ERROR" + Main.RESET);
         }
         return 0;
-    }
+    }*/
     /* ПРОДВИНУТЫЙ СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ИЛИ НАИМЕНЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
 
