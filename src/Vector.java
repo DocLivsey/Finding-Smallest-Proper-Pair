@@ -79,6 +79,15 @@ public class Vector {
             cloneVector.setItem(i, this.getItem(i));
         return cloneVector;
     }
+    public String toString()
+    {
+        StringBuilder vector = new StringBuilder("(");
+        for (double item : this.vector)
+            vector.append(item).append(", ");
+        vector.delete(vector.length() - 2, vector.length() - 1);
+        vector.append(")");
+        return vector.toString();
+    }
     void printVector()
     {
         System.out.print(Main.HEADER_OUTPUT + "\nВектор размерностью " + vectorSize + Main.OUTPUT + ": \n { ");
