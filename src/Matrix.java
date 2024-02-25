@@ -361,6 +361,13 @@ public class Matrix {
             return resultMatrix;
         }
     }
+    public Matrix matrixPow(int pow)
+    {
+        Matrix matrixPow = this.cloneMatrix();
+        for (int i = 0; i < pow - 1; i++)
+            matrixPow = matrixPow.matrixMultiplication(this).cloneMatrix();
+        return matrixPow;
+    }
     Vector matrixAndVectorMultiplication(Vector addVector)
     {
         Matrix vectorMatrix = addVector.vectorToMatrix();
@@ -541,7 +548,7 @@ public class Matrix {
     }
     public boolean isMatrixSingular()
     { return this.calculateDeterminant() == 0; }
-    public double powMethod(Vector y_0)
+    /*public double powMethod(Vector y_0)
     {
         System.out.println(Main.ERROR + "Внимание, степенной метод работает только для матриц простой структуры" + Main.RESET);
         double maxAbsLambda;
@@ -559,16 +566,37 @@ public class Matrix {
             maxAbsLambda = lambda_K;
             Vector yNew = this.matrixAndVectorMultiplication(xPrev).cloneVector();
             normaY = yNew.ChebyshevNorm();
-            //int count = 0;
             for (int i = 0; i < xPrev.getVectorSize(); i++)
                 if (Math.abs(xPrev.getItem(i)) > eps.getEpsilon())
-                {
+                    lambda_K += (yNew.getItem(i) / xPrev.getItem(i));
+            Vector xNew = yNew.cloneVector().constantMultiplication(1 / normaY);
+            xPrev = xNew.cloneVector();
+        } while(Math.abs(lambda_K - maxAbsLambda) >= eps.getEpsilon());
+        maxAbsLambda = lambda_K;
+        return maxAbsLambda;
+    }*/
+    public double powMethod(int pow, Vector y_0)
+    {
+        double maxAbsLambda;
+        System.out.println(Main.ERROR + "Внимание, степенной метод работает только для матриц простой структуры" + Main.RESET);
+        if (y_0 == null)
+        {
+            y_0 = new Vector(this.rowsCount);
+            y_0.createRandomVector(0, 10);
+        }
+        double normaY = y_0.ChebyshevNorm();
+        Vector x_0 = y_0.cloneVector().constantMultiplication(1 / normaY);
+        double lambda_K = 0;
+        MathBase eps = new MathBase();
+        Vector xPrev = x_0.cloneVector();
+        do {
+            maxAbsLambda = lambda_K;
+            Vector yNew = this.matrixPow(pow).cloneMatrix().matrixAndVectorMultiplication(xPrev).cloneVector();
+            normaY = yNew.ChebyshevNorm();
+            for (int i = 0; i < xPrev.getVectorSize(); i++)
+                if (Math.abs(xPrev.getItem(i)) > eps.getEpsilon())
                     lambda_K = (yNew.getItem(i) / xPrev.getItem(i));
-                    //count++;
-                    //System.out.println("count = " + count + " lambda = " + lambda_K);
-                }
-            //lambda_K /= count;
-            //System.out.println("lambda = " + lambda_K);
+            lambda_K = Math.pow(Math.abs(lambda_K), (double) 1 / pow);
             Vector xNew = yNew.cloneVector().constantMultiplication(1 / normaY);
             xPrev = xNew.cloneVector();
         } while(Math.abs(lambda_K - maxAbsLambda) >= eps.getEpsilon());
@@ -577,20 +605,20 @@ public class Matrix {
     }
     /* СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
-    public double advancedPowMethod(Vector y_0)
+    public double advancedPowMethod(int pow, Vector y_0)
     {
         switch (ParseMessage.parseChoiceOfTwo("Max", "Min"))
         {
             case 1:
-                return this.powMethod(y_0);
+                return this.powMethod(pow, y_0);
             case 2:
-                double biggestLambda = this.powMethod(y_0);
+                double biggestLambda = this.powMethod(pow, y_0);
                 Matrix singleMatrix = new Matrix(this.rowsCount, this.columnsCount);
                 singleMatrix.createSingleMatrix();
-                singleMatrix.constantMultiplication(-biggestLambda).printMatrix();
+                singleMatrix = singleMatrix.constantMultiplication(-biggestLambda);
                 Matrix newMatrix = this.matrixAddition(singleMatrix).cloneMatrix();
-                newMatrix.printMatrix();
-                return biggestLambda + newMatrix.powMethod(y_0);
+                double lambda = newMatrix.powMethod(pow, y_0);
+                return biggestLambda - lambda;
             default:
                 System.out.println(Main.ERROR + "ERROR" + Main.RESET);
         }
@@ -598,4 +626,5 @@ public class Matrix {
     }
     /* ПРОДВИНУТЫЙ СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ИЛИ НАИМЕНЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
+
 }
