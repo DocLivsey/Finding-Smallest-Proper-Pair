@@ -568,6 +568,14 @@ public class Matrix {
         @Override
         public String toString()
         { return "eigenValue = " + this.eigenValue + " eigenVector = " + this.eigenVector.toString(); }
+        public static boolean isTheVectorSignChanged(Vector eigenVectorBefore, Vector eigenVectorAfter)
+        {
+            boolean flagIsChanged = true;
+            for (int i = 0; i < eigenVectorBefore.getVectorSize(); i++)
+                if (Math.round(eigenVectorAfter.getItem(i) * eigenVectorBefore.getItem(i)) > 0)
+                    flagIsChanged = false;
+            return flagIsChanged;
+        }
     }
     /*public double powMethod(Vector y_0)
     {
@@ -622,29 +630,32 @@ public class Matrix {
             xPrev = xNew.cloneVector();
         } while(Math.abs(lambda_K - maxAbsLambda) >= eps.getEpsilon());
         maxAbsLambda = lambda_K;
+        if (EigenPair.isTheVectorSignChanged(xPrev, this.matrixAndVectorMultiplication(xPrev)))
+            maxAbsLambda = -maxAbsLambda;
         return new EigenPair(maxAbsLambda, xPrev);
     }
     /* СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
-    /*public double advancedPowMethod(int pow, Vector y_0)
+    public EigenPair advancedPowMethod(int pow, Vector y_0)
     {
         switch (ParseMessage.parseChoiceOfTwo("Max", "Min"))
         {
             case 1:
                 return this.powMethod(pow, y_0);
             case 2:
-                double biggestLambda = this.powMethod(pow, y_0);
+                double biggestLambda = this.powMethod(pow, y_0).getEigenValue();
                 Matrix singleMatrix = new Matrix(this.rowsCount, this.columnsCount);
                 singleMatrix.createSingleMatrix();
                 singleMatrix = singleMatrix.constantMultiplication(-biggestLambda);
                 Matrix newMatrix = this.matrixAddition(singleMatrix).cloneMatrix();
-                double lambda = newMatrix.powMethod(pow, y_0);
-                return biggestLambda - lambda;
+                EigenPair newPair = newMatrix.powMethod(pow, y_0);
+                return new EigenPair(biggestLambda + newPair.getEigenValue(),
+                        this.powMethod(pow, y_0).getEigenVector().vectorAddition(newPair.getEigenVector()));
             default:
                 System.out.println(Main.ERROR + "ERROR" + Main.RESET);
         }
-        return 0;
-    }*/
+        return new EigenPair(Double.NaN, null);
+    }
     /* ПРОДВИНУТЫЙ СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ИЛИ НАИМЕНЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
 
