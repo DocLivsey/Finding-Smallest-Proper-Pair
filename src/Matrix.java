@@ -577,7 +577,7 @@ public class Matrix {
             return flagIsChanged;
         }
     }
-    /*public double powMethod(Vector y_0)
+    public double PM_AlgorithmFindBiggestEigenPair(Vector y_0)
     {
         System.out.println(Main.ERROR + "Внимание, степенной метод работает только для матриц простой структуры" + Main.RESET);
         double maxAbsLambda;
@@ -603,7 +603,7 @@ public class Matrix {
         } while(Math.abs(lambda_K - maxAbsLambda) >= eps.getEpsilon());
         maxAbsLambda = lambda_K;
         return maxAbsLambda;
-    }*/
+    }
     public EigenPair powMethod(int pow, Vector y_0)
     {
         double maxAbsLambda;
@@ -658,5 +658,4 @@ public class Matrix {
     }
     /* ПРОДВИНУТЫЙ СТЕПЕННОЙ МЕТОД
     АЛГОРИТМ ВЫЧИСЛЕНИЯ НАИБОЛЬШЕГО ИЛИ НАИМЕНЬШЕГО ПО МОДУЛЮ СОБСТВЕННОГО ЗНАЧЕНИЯ МАТРИЦЫ */
-
 }
