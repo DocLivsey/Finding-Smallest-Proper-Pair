@@ -606,6 +606,7 @@ public class Matrix {
     }
     public EigenPair powMethod(int pow, Vector y_0)
     {
+        int iterationsCount = 1;
         double maxAbsLambda;
         System.out.println(Main.ERROR + "Внимание, степенной метод работает только для матриц простой структуры" + Main.RESET);
         if (y_0 == null)
@@ -619,6 +620,7 @@ public class Matrix {
         MathBase eps = new MathBase();
         Vector xPrev = x_0.cloneVector();
         do {
+            iterationsCount++;
             maxAbsLambda = lambda_K;
             Vector yNew = this.matrixPow(pow).cloneMatrix().matrixAndVectorMultiplication(xPrev).cloneVector();
             normaY = yNew.ChebyshevNorm();
@@ -632,6 +634,7 @@ public class Matrix {
         maxAbsLambda = lambda_K;
         if (EigenPair.isTheVectorSignChanged(xPrev, this.matrixAndVectorMultiplication(xPrev)))
             maxAbsLambda = -maxAbsLambda;
+        System.out.println("COUNT OF ITERATIONS: " + iterationsCount);
         return new EigenPair(maxAbsLambda, xPrev);
     }
     /* СТЕПЕННОЙ МЕТОД
@@ -643,14 +646,14 @@ public class Matrix {
             case 1:
                 return this.powMethod(pow, y_0);
             case 2:
-                double biggestLambda = this.powMethod(pow, y_0).getEigenValue();
+                EigenPair biggestPair = this.powMethod(pow, y_0);
+                double biggestLambda = biggestPair.getEigenValue();
                 Matrix singleMatrix = new Matrix(this.rowsCount, this.columnsCount);
                 singleMatrix.createSingleMatrix();
                 singleMatrix = singleMatrix.constantMultiplication(-biggestLambda);
                 Matrix newMatrix = this.matrixAddition(singleMatrix).cloneMatrix();
                 EigenPair newPair = newMatrix.powMethod(pow, y_0);
-                return new EigenPair(biggestLambda + newPair.getEigenValue(),
-                        this.powMethod(pow, y_0).getEigenVector().vectorAddition(newPair.getEigenVector()));
+                return new EigenPair(biggestLambda + newPair.getEigenValue(), newPair.getEigenVector());
             default:
                 System.out.println(Main.ERROR + "ERROR" + Main.RESET);
         }

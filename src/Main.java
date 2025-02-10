@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         String pathToMatrix = "src/inputMatrix.txt";
         Matrix matrix = new Matrix(pathToMatrix);
-        System.out.println(matrix.advancedPowMethod(4, null));
+        System.out.println(matrix.advancedPowMethod(16, null));
 
     }
 }
